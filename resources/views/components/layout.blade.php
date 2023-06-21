@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="/main.css" />
   </head>
   <body>
     <header class="header-bar mb-3">
@@ -22,11 +22,12 @@
           <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-comment"></i></span>
           <a href="#" class="mr-2"><img title="My Profile" data-toggle="tooltip" data-placement="bottom" style="width: 32px; height: 32px; border-radius: 16px" src="https://gravatar.com/avatar/f64fc44c03a8a7eb1d52502950879659?s=128" /></a>
           <a class="btn btn-sm btn-success mr-2" href="#">Create Post</a>
-          <form action="#" method="POST" class="d-inline">
+          <form action="/logout" method="POST" class="d-inline">
+            @csrf
             <button class="btn btn-sm btn-secondary">Sign Out</button>
           </form>
         </div>
-        
+
         @else
         
         <form action="/login" method="POST" class="mb-0 pt-2 pt-md-0">
@@ -48,11 +49,28 @@
     </header>
     <!-- header ends here -->
 
+    {{-- Here I see if the session has a message of type success --}}
+    @if(session()->has('success'))
+    <div class="container container-narrow">
+    <div class="alert alert-success text-center">
+      {{session('success')}}
+    </div>
+    </div>
+    @endif
+
+    @if(session()->has('failure'))
+    <div class="container container-narrow">
+      <div class="alert alert-danger text-center">
+        {{session('failure')}}
+      </div>
+    </div>
+    @endif
+    
     {{$slot}}
 
     <!-- footer begins -->
     <footer class="border-top text-center small text-muted py-3">
-      <p class="m-0">Copyright &copy; 2022 <a href="/" class="text-muted">OurApp</a>. All rights reserved.</p>
+      <p class="m-0">Copyright &copy; {{date('Y')}} <a href="/" class="text-muted">OurApp</a>. All rights reserved.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
