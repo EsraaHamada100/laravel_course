@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    /**
+     * here we see the power of laravel because in laravel if you match
+     * the name in web.php and this name and write the model it will 
+     * automatically go to database and get the post with this id
+     * else if you don't write the same name nor Post this will be the id as usual 
+     */
+    public function viewSinglePost(Post $post){
+        return view('single-post', ['post'=> $post]);
+    }
 
     public function storeNewPost(Request $request){
         $incomingFields = $request->validate([
@@ -19,8 +28,8 @@ class PostController extends Controller
         $incomingFields['body'] = strip_tags($incomingFields['body']);
         $incomingFields['user_id'] = auth()->id();
         // This will create new post record in database with the data in the $incomingFields
-        Post::create($incomingFields);
-        return 'you have created new post';
+        $newPost = Post::create($incomingFields);
+        return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created.');
     }
     public function showCreateForm(){
         return view('create-post');

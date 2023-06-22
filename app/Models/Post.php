@@ -20,4 +20,10 @@ class Post extends Model
         'body',
         'user_id',
     ];
+    // This function will return the author of the post 
+    public function user(){
+        // here I give him the name of model and the name of column in the post database
+        // that has the id value and he will search for user with this id and return it
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

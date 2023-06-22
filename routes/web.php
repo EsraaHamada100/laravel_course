@@ -26,6 +26,8 @@ Route::post('/logout', [UserController::class, "logout"]);
 // Blog post routes
 Route::get('create-post', [PostController::class, "showCreateForm"]);
 Route::post('create-post', [PostController::class, "storeNewPost"]);
+// here {post} means the id of post that will be passed 
+Route::get('post/{post}', [PostController::class, "viewSinglePost"]);
 
 
 
