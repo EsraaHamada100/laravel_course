@@ -17,7 +17,9 @@
         </p>
 
         <div class="body-content">
-            {{$post->body}}
+            {{-- We make that to allow injection of tags , note only do that
+                if you 100% sure that will not couse any security issues --}}
+            {!!$post->body !!}
         </div>
   </div>
 </x-layout>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -14,6 +15,17 @@ class PostController extends Controller
      * else if you don't write the same name nor Post this will be the id as usual 
      */
     public function viewSinglePost(Post $post){
+        /**
+         * this will change the mark down symbols to html tags 
+         * but be careful he will not show the style until you allow it from 
+         * the html page in your code and that's for security reasons
+         */
+        $ourBodyInHtml = Str::markdown($post->body);
+
+        // here I allow only cretin tags to exist so to prevent malicious things and
+        // or/and links
+        $post['body'] = strip_tags($ourBodyInHtml, '<p><ol><li><strong><em><h3><br>');
+
         return view('single-post', ['post'=> $post]);
     }
 
