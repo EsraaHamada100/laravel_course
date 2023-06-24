@@ -8,10 +8,18 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    public function profile(User $user){
+        // we call the function posts() from the user model to get the user posts
+        // I use latest to make the newest post at the top 
+        $posts = $user->posts()->latest()->get();
+        return view('profile-posts', ['username'=> $user->username, 'posts'=> $posts, 'postCount'=> $posts->count()]);
+    }
+
     public function logout(){
         auth()->logout();
         return redirect('/')->with('success', 'You are now logged out.');
     }
+
     public function showCorrectHomepage(){
         $isLoggedIn = auth()->check();
         if($isLoggedIn){
@@ -20,6 +28,7 @@ class UserController extends Controller
             return view('homepage');
         }
     }
+
     public function login(Request $request){
         // here in the key you should write the name of the field
         $incomingField = $request->validate([

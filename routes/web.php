@@ -37,4 +37,13 @@ Route::post('create-post', [PostController::class, "storeNewPost"])->middleware(
 Route::get('post/{post}', [PostController::class, "viewSinglePost"])->middleware('mustBeLoggedIn');
 
 
+// profile related routes
 
+/**
+ * We write it like that because the database , automatically suppose that this field
+ * is the id
+ * ex : 'profile/{username:id}'
+ * but actually we give the username field in database so we should tell him that 
+ * and that is to benefit from the power of model
+ */
+Route::get('profile/{user:username}', [UserController::class, 'profile']);
