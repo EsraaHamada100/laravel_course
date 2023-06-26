@@ -38,7 +38,10 @@ class PostPolicy
     // note that you only need to send the post when calling this function
     // because laravel send the user automatically
     public function update(User $user, Post $post): bool
-    {
+    {   
+        if($user->isAdmin){
+            return true;
+        }
         return $user->id === $post->user_id;
     }
 
@@ -47,6 +50,9 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
+        if($user->isAdmin){
+            return true;
+        }
         return $user->id === $post->user_id;
     }
 
