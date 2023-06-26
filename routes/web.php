@@ -21,6 +21,11 @@ use App\Http\Controllers\UserController;
  * 
  */
 
+// this function should be written in the controller but for simplicity we write it here
+Route::get('/admins-only', function(){
+    return 'Cool, You are an admin';
+})->middleware('can:visitAdminPages');
+
 // User related routes
 
 // we named it login because auth middleware will redirect to something named
