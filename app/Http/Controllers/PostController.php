@@ -8,12 +8,17 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
+    public function showEditForm(Post $post){
+        return view('edit-post', ['post'=> $post]);
+    }
+
+    public function update(Post $post, Request $request){
+        $incomingFields = $this->stripHtmlAndValidateFields($request);
+        $post->update($incomingFields);
+        return redirect("/post/{$post->id}")->with('success', 'You have successfully updated this post.');
+    }
     public function delete(Post $post){
-        // here we used the PostPolicy class 
-        $cannotDelete = auth()->user()->cannot('delete', $post);
-        if($cannotDelete){
-            return 'You cannot delete this post.';
-        }
         $post->delete();
         return redirect('/profile/'.auth()->user()->username)->with('success', 'Post successfully deleted.');
     }
@@ -39,14 +44,7 @@ class PostController extends Controller
     }
 
     public function storeNewPost(Request $request){
-        $incomingFields = $request->validate([
-            'title'=> 'required',
-            'body'=> 'required',
-        ]);
-        // The code is removing any HTML tags , so that no one can inject these tags to
-        // perform any kind of attack
-        $incomingFields['title'] = strip_tags($incomingFields['title']);
-        $incomingFields['body'] = strip_tags($incomingFields['body']);
+        $incomingFields = $this->stripHtmlAndValidateFields($request);
         $incomingFields['user_id'] = auth()->id();
         // This will create new post record in database with the data in the $incomingFields
         $newPost = Post::create($incomingFields);
@@ -55,4 +53,18 @@ class PostController extends Controller
     public function showCreateForm(){
         return view('create-post');
     }
+
+    public function stripHtmlAndValidateFields(Request $request){
+        $incomingFields = $request->validate([
+            'title'=> 'required',
+            'body'=> 'required',
+        ]);
+        // The code is removing any HTML tags , so that no one can inject these tags to
+        // perform any kind of attack
+        $incomingFields['title'] = strip_tags($incomingFields['title']);
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+
+        return $incomingFields;
+    }
+
 }

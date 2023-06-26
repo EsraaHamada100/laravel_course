@@ -35,7 +35,12 @@ Route::get('create-post', [PostController::class, "showCreateForm"])->middleware
 Route::post('create-post', [PostController::class, "storeNewPost"])->middleware('auth');
 // here {post} means the id of post that will be passed 
 Route::get('post/{post}', [PostController::class, "viewSinglePost"])->middleware('mustBeLoggedIn');
-Route::delete('post/{post}', [PostController::class, "delete"]);
+// here we use middleware to apply PostPolicy , and I think it's a better way
+Route::delete('post/{post}', [PostController::class, "delete"])->middleware('can:delete,post');
+// get the edit form
+Route::get('post/{post}/edit', [PostController::class, "showEditForm"])->middleware('can:update,post');
+// actually update the post
+Route::put('post/{post}', [PostController::class, "update"])->middleware('can:update,post');
 
 // profile related routes
 
