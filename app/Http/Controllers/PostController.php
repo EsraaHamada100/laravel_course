@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    public function delete(Post $post){
+        // here we used the PostPolicy class 
+        $cannotDelete = auth()->user()->cannot('delete', $post);
+        if($cannotDelete){
+            return 'You cannot delete this post.';
+        }
+        $post->delete();
+        return redirect('/profile/'.auth()->user()->username)->with('success', 'Post successfully deleted.');
+    }
     /**
      * here we see the power of laravel because in laravel if you match
      * the name in web.php and this name and write the model it will 
