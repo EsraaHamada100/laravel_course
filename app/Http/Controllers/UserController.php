@@ -8,6 +8,21 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    public function storeAvatar(Request $request){
+        // remember we named it avatar in the avatar-form specifically in the input tag
+        /**
+         * the avatars word inside the store() will create folder named avatars inside
+         * the storage/app/public folder
+         * but you must remember that we made a shortcut for this storage/app/public folder
+         * in the top-level app and names it storage so you will access it from the url 
+         * like that public/storage/avatars/theImageName
+         **/ 
+        $request->file('avatar')->store('public/avatars');
+        return 'we store it';
+    }
+    public function showAvatarForm(){
+        return view('avatar-form');
+    }
     public function profile(User $user){
         // we call the function posts() from the user model to get the user posts
         // I use latest to make the newest post at the top 
