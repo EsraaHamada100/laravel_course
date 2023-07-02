@@ -57,5 +57,5 @@ Route::put('post/{post}', [PostController::class, "update"])->middleware('can:up
  * and that is to benefit from the power of model
  */
 Route::get('profile/{user:username}', [UserController::class, 'profile']);
-Route::get('/manage-avatar', [UserController::class, 'showAvatarForm']);
-Route::post('/manage-avatar', [UserController::class, 'storeAvatar']);
+Route::get('/manage-avatar', [UserController::class, 'showAvatarForm'])->middleware('mustBeLoggedIn');
+Route::post('/manage-avatar', [UserController::class, 'storeAvatar'])->middleware('mustBeLoggedIn');

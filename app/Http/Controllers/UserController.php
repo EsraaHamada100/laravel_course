@@ -5,19 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
     public function storeAvatar(Request $request){
-        // remember we named it avatar in the avatar-form specifically in the input tag
+        // here we said that the file is required and must be an image
+        // and the size of that file shouldn't exceed 3000 KB
+        $request->validate([
+            'avatar'=>'required|image|max:3000',
+        ]);
         /**
-         * the avatars word inside the store() will create folder named avatars inside
-         * the storage/app/public folder
-         * but you must remember that we made a shortcut for this storage/app/public folder
-         * in the top-level app and names it storage so you will access it from the url 
-         * like that public/storage/avatars/theImageName
-         **/ 
-        $request->file('avatar')->store('public/avatars');
+         * file('avatar) -> must be the same as the name of input tag in avatar-form
+         * here fit 120 means to make the image 120*120 px 
+         * encode('jpg') -> means to convert the type of image to jpg
+        */
+        $imgData = Image::make($request->file('avatar'))->fit('120')->encode('jpg');
+
+        // making a unique name for our image
+        $user = auth()->user();
+        $filename = $user->id.'-'.uniqid().'.jpg';
+
+        // we will use this instead of $request->file('avatar')->store('public/avatars');
+        // to upload the resized image
+        Storage::put('public/avatars/'. $filename, $imgData);
         return 'we store it';
     }
     public function showAvatarForm(){
