@@ -27,10 +27,25 @@ class UserController extends Controller
         $user = auth()->user();
         $filename = $user->id.'-'.uniqid().'.jpg';
 
+        $oldAvatar = $user->avatar;
         // we will use this instead of $request->file('avatar')->store('public/avatars');
         // to upload the resized image
         Storage::put('public/avatars/'. $filename, $imgData);
-        return 'we store it';
+        
+        // to save the avatar fileName in the database
+        $user->avatar = $filename;
+        $user->save();
+
+        // we make these to delete the old avatar when the user upload a new one
+
+        // that means there is an avatar that user uploaded before
+        if($oldAvatar != 'fallback-avatar.jpg'){
+            // when we delete we should use the database path public/avatars/imageName
+            // instead of the URL path storage/avatars/imageName
+            $avatarDatabasePath = str_replace('/storage/', 'public/' , $oldAvatar);
+            Storage::delete($avatarDatabasePath);
+        }
+        return back()->with('success', 'Congrats on the new avatar.');
     }
     public function showAvatarForm(){
         return view('avatar-form');
@@ -39,7 +54,7 @@ class UserController extends Controller
         // we call the function posts() from the user model to get the user posts
         // I use latest to make the newest post at the top 
         $posts = $user->posts()->latest()->get();
-        return view('profile-posts', ['username'=> $user->username, 'posts'=> $posts, 'postCount'=> $posts->count()]);
+        return view('profile-posts', ['username'=> $user->username,'avatar'=> $user->avatar, 'posts'=> $posts, 'postCount'=> $posts->count()]);
     }
 
     public function logout(){
