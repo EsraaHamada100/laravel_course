@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FollowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,7 @@ Route::get('/admins-only', function(){
     return 'Cool, You are an admin';
 })->middleware('can:visitAdminPages');
 
-// User related routes
+//! User related routes
 
 // we named it login because auth middleware will redirect to something named
 // login and we wanna it to redirect him to '/' so we name it login 
@@ -35,7 +36,8 @@ Route::post('/register', [UserController::class, "register"])->middleware('guest
 Route::post('/login', [UserController::class, "login"])->middleware('guest');
 Route::post('/logout', [UserController::class, "logout"])->middleware('auth');
 
-// Blog post routes
+//! Blog post routes
+
 Route::get('create-post', [PostController::class, "showCreateForm"])->middleware('auth');
 Route::post('create-post', [PostController::class, "storeNewPost"])->middleware('auth');
 // here {post} means the id of post that will be passed 
@@ -47,7 +49,12 @@ Route::get('post/{post}/edit', [PostController::class, "showEditForm"])->middlew
 // actually update the post
 Route::put('post/{post}', [PostController::class, "update"])->middleware('can:update,post');
 
-// profile related routes
+//! follow related routes
+Route::post('create-follow/{user:username}', [FollowController::class, "createFollow"])->middleware('mustBeLoggedIn');
+Route::delete('remove-follow/{user:username}', [FollowController::class, "removeFollow"])->middleware('mustBeLoggedIn');
+
+
+//! profile related routes
 
 /**
  * We write it like that because the database , automatically suppose that this field
