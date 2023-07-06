@@ -35,8 +35,8 @@
             {{-- Request::segment(3) is the third thing in the URL 
                 profile/username/nothing or followers or following --}}
           <a href="/profile/{{$sharedData['username']}}" class="profile-nav-link nav-item nav-link {{Request::segment(3) == "" ? "active":"" }}">Posts: {{$sharedData['postCount']}}</a>
-          <a href="/profile/{{$sharedData['username']}}/followers" class="profile-nav-link nav-item nav-link {{Request::segment(3) == "followers" ? "active":"" }}">Followers: 3</a>
-          <a href="/profile/{{$sharedData['username']}}/following" class="profile-nav-link nav-item nav-link {{Request::segment(3) == "following" ? "active":"" }}">Following: 2</a>
+          <a href="/profile/{{$sharedData['username']}}/followers" class="profile-nav-link nav-item nav-link {{Request::segment(3) == "followers" ? "active":"" }}">Followers: {{$sharedData['followerCount']}}</a>
+          <a href="/profile/{{$sharedData['username']}}/following" class="profile-nav-link nav-item nav-link {{Request::segment(3) == "following" ? "active":"" }}">Following: {{$sharedData['followingCount']}}</a>
         </div>
 
         <div class="profile-slot-content">
