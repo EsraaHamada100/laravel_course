@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\View;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
@@ -51,7 +52,7 @@ class UserController extends Controller
     public function showAvatarForm(){
         return view('avatar-form');
     }
-    public function profile(User $user){
+    private function getSharedData($user){
         $currentlyFollowing = false;
         // if he is logged in
         if(auth()->check()){
@@ -60,10 +61,35 @@ class UserController extends Controller
                 ['followed_user', '=', $user->id],
             ])->exists();
         }
+        $posts = $user->posts();
+        // send the data I wanna to send in a map or as we name it in php associated array
+        View::share(
+            'sharedData',
+            [
+                'currentlyFollowing'=> $currentlyFollowing,
+                'username'=> $user->username,'avatar'=> $user->avatar, 
+                'postCount'=> $posts->count(),
+            ]
+        );
+    }
+    public function profile(User $user){
+        $this->getSharedData($user);
         // we call the function posts() from the user model to get the user posts
         // I use latest to make the newest post at the top 
         $posts = $user->posts()->latest()->get();
-        return view('profile-posts', ['currentlyFollowing'=> $currentlyFollowing,'username'=> $user->username,'avatar'=> $user->avatar, 'posts'=> $posts, 'postCount'=> $posts->count()]);
+        return view('profile-posts', ['posts'=> $posts]);
+    }
+
+    public function profileFollowers(User $user){
+        $this->getSharedData($user);
+
+        return view('profile-followers', []);
+    }
+
+    public function profileFollowing(User $user){
+        $this->getSharedData($user);
+
+        return view('profile-following', []);
     }
 
     public function logout(){
