@@ -51,7 +51,7 @@ Route::put('post/{post}', [PostController::class, "update"])->middleware('can:up
 
 //! follow related routes
 Route::post('create-follow/{user:username}', [FollowController::class, "createFollow"])->middleware('mustBeLoggedIn');
-Route::delete('remove-follow/{user:username}', [FollowController::class, "removeFollow"])->middleware('mustBeLoggedIn');
+Route::post('remove-follow/{user:username}', [FollowController::class, "removeFollow"])->middleware('mustBeLoggedIn');
 
 
 //! profile related routes

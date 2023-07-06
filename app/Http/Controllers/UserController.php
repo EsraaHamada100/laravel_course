@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
@@ -51,10 +52,18 @@ class UserController extends Controller
         return view('avatar-form');
     }
     public function profile(User $user){
+        $currentlyFollowing = false;
+        // if he is logged in
+        if(auth()->check()){
+            $currentlyFollowing = Follow::where([
+                ['user_id', '=', auth()->user()->id],
+                ['followed_user', '=', $user->id],
+            ])->exists();
+        }
         // we call the function posts() from the user model to get the user posts
         // I use latest to make the newest post at the top 
         $posts = $user->posts()->latest()->get();
-        return view('profile-posts', ['username'=> $user->username,'avatar'=> $user->avatar, 'posts'=> $posts, 'postCount'=> $posts->count()]);
+        return view('profile-posts', ['currentlyFollowing'=> $currentlyFollowing,'username'=> $user->username,'avatar'=> $user->avatar, 'posts'=> $posts, 'postCount'=> $posts->count()]);
     }
 
     public function logout(){

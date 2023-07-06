@@ -32,7 +32,7 @@ class User extends Authenticatable
      */
     protected function avatar(): Attribute{
         return Attribute::make(get: function($value){
-            return $value?'/storage/avatars/'. $value : 'fallback-avatar.jpg';
+            return $value?'/storage/avatars/'. $value : '/fallback-avatar.jpg';
         });
     }
 
