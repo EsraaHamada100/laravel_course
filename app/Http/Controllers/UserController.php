@@ -105,7 +105,8 @@ class UserController extends Controller
             return view(
                 'homepage-feed', 
                 [
-                    'posts'=> auth()->user()->feedPosts()->latest()->get()
+                    // to show posts in pages if they are long every page has 4 posts
+                    'posts'=> auth()->user()->feedPosts()->latest()->paginate(4)
                 ]
             );
         }else {
