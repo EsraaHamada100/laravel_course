@@ -102,7 +102,12 @@ class UserController extends Controller
     public function showCorrectHomepage(){
         $isLoggedIn = auth()->check();
         if($isLoggedIn){
-            return view('homepage-feed');
+            return view(
+                'homepage-feed', 
+                [
+                    'posts'=> auth()->user()->feedPosts()->latest()->get()
+                ]
+            );
         }else {
             return view('homepage');
         }

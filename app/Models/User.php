@@ -71,5 +71,20 @@ class User extends Authenticatable
         return $this->hasMany(Follow::class, 'user_id');
     }
 
+    public function feedPosts(){
+        /**
+         * We user hasManyThrough is we want to retrieve something from a table that
+         * that is linked to intermediate table so from our table to the intermediate table
+         * which than lead to the target table, hope it's clear now.
+         * first arg : It's the Model of the Goal table that we wanna retrieve it's data
+         * second arg : It's the Model of the intermediate table
+         * third arg : the foreign key of the intermediate table
+         * fourth arg : the foreign key of the target table
+         * fifth arg : The primary key of our local table here it's Users table
+         * sixth arg : The primary key of the target table and actually it's not the primary key
+         * it's only the field that we are interested in.
+         */
+        return $this->hasManyThrough(Post::class, Follow::class, 'user_id', 'user_id', 'id', 'followed_user');
+    }
     
 }
