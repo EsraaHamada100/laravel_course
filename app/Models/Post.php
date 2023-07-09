@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Post extends Model
 {
+    use Searchable;
     use HasFactory;
     /**
      *   This prevents user from mass assignment to any field other than theses
@@ -20,6 +22,13 @@ class Post extends Model
         'body',
         'user_id',
     ];
+
+    public function toSearchableArray(){
+        return [
+            'title' => $this->title,
+            'body' => $this->body,
+        ];
+    }
     // This function will return the author of the post 
     public function user(){
         // here I give him the name of model and the name of column in the post database

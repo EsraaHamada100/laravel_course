@@ -67,4 +67,10 @@ class PostController extends Controller
         return $incomingFields;
     }
 
+    public function search($term){
+        $posts = Post::search($term)->get();
+        // to load some data of the user who created the post
+        $posts->load('user:id,username,avatar');
+        return $posts;
+    }
 }

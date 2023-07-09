@@ -48,6 +48,8 @@ Route::delete('post/{post}', [PostController::class, "delete"])->middleware('can
 Route::get('post/{post}/edit', [PostController::class, "showEditForm"])->middleware('can:update,post');
 // actually update the post
 Route::put('post/{post}', [PostController::class, "update"])->middleware('can:update,post');
+// search route
+Route::get('search/{term}', [PostController::class, "search"]);
 
 //! follow related routes
 Route::post('create-follow/{user:username}', [FollowController::class, "createFollow"])->middleware('mustBeLoggedIn');
