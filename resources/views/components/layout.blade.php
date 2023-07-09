@@ -16,7 +16,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/main.css" />
+    {{-- importing the css and js code from the resources
+      note: you should run npm run dev in order for it to run --}}
+    @vite(['resources/css/app.css'])
+    @vite(['resources/js/app.js'])
   </head>
   <body>
     <header class="header-bar mb-3">
