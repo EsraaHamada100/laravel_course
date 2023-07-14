@@ -82,18 +82,40 @@ class UserController extends Controller
         return view('profile-posts', ['posts'=> $posts]);
     }
 
+    public function profileRaw(User $user){
+        $posts = $user->posts()->latest()->get();
+        return response()->json([
+            'theHTML'=> view('profile-posts-only', ['posts' => $posts])->render(), 
+            'docTitle'=>$user->username."'s profile",
+        ]);
+    }
     public function profileFollowers(User $user){
         $this->getSharedData($user);
         $followers = $user->followers()->latest()->get();
         return view('profile-followers', ['followers'=> $followers]);
     }
 
+    public function profileFollowersRaw(User $user){
+        $followers = $user->followers()->latest()->get();
+
+        return response()->json([
+            'theHTML'=> view('profile-followers-only', ['followers' => $followers])->render(), 
+            'docTitle'=>$user->username."'s followers",
+        ]);
+    }
     public function profileFollowing(User $user){
         $this->getSharedData($user);
         $followingTheseUsers = $user->followingTheseUsers()->latest()->get();
         return view('profile-following', ['followingTheseUsers'=> $followingTheseUsers]);
     }
 
+    public function profileFollowingRaw(User $user){
+        $followingTheseUsers = $user->followingTheseUsers()->latest()->get();
+        return response()->json([
+            'theHTML'=> view('profile-following-only', ['followingTheseUsers' => $followingTheseUsers])->render(), 
+            'docTitle'=>"Who " . $user->username . " follows",
+        ]);
+    }
     public function logout(){
         auth()->logout();
         return redirect('/')->with('success', 'You are now logged out.');
