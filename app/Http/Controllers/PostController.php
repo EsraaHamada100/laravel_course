@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Mail\NewPostEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendNewPostEmail;
 
 class PostController extends Controller
 {
@@ -50,13 +49,14 @@ class PostController extends Controller
         $incomingFields['user_id'] = auth()->id();
         // This will create new post record in database with the data in the $incomingFields
         $newPost = Post::create($incomingFields);
-
-        Mail::to('test@google.com')->send(
-            New NewPostEmail([
+        dispatch(
+            new SendNewPostEmail([
+                'sendTo'=> auth()->user()->email,
                 'name'=>auth()->user()->username,
                 'postTitle'=>$newPost->title,
             ])
         );
+
         return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created.');
     }
     public function showCreateForm(){
