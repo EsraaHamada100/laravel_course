@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\User;
 use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
@@ -132,7 +134,20 @@ class UserController extends Controller
                 ]
             );
         }else {
-            return view('homepage');
+            /**
+             * This take three arguments
+             * 1- The key of the cache
+             * 2- the number of seconds you want the data to be cached
+             * 3- what he should do if he doesn't find it in the cache
+             * note that he will not just bring data from database he
+             * will also cache it under the name of 'postCount' for 20 sec
+             */
+            $postCount = Cache::remember('postCount', 20, function (){
+                // this sleep is only for testing purposes
+                // sleep(5);
+                return Post::count();
+            });
+            return view('homepage', ['postCount'=>$postCount]);
         }
     }
 
