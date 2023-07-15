@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Mail\RecapEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -12,6 +14,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // this code will run the function every minute
+        $schedule->call(function (){
+            Mail::to('test@gmail.com')->send(new RecapEmail());
+        })->everyMinute();
         // $schedule->command('inspire')->hourly();
     }
 
