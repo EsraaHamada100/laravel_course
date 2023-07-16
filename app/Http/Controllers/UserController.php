@@ -174,6 +174,20 @@ class UserController extends Controller
 
         
     }
+
+    public function loginApi(Request $request){
+        $incomingFields = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+        // if his data is correct
+        if(auth()->attempt($incomingFields)){
+            $user = User::firstWhere('username', $incomingFields['username']);
+            $token = $user->createToken('ourapptoken')->plainTextToken;
+            return $token;
+        }
+        return 'sorry , you are not authenticated';
+    }
     public function register(Request $request){
         $incomingField = $request->validate([
             'username' => ['required', 'min:3', 'max:20', Rule::unique('users', 'username')],

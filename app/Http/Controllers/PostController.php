@@ -23,6 +23,11 @@ class PostController extends Controller
         $post->delete();
         return redirect('/profile/'.auth()->user()->username)->with('success', 'Post successfully deleted.');
     }
+
+    public function deleteApi(Post $post){
+        $post->delete();
+        return 'true';
+    }
     /**
      * here we see the power of laravel because in laravel if you match
      * the name in web.php and this name and write the model it will 
@@ -58,6 +63,22 @@ class PostController extends Controller
         );
 
         return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created.');
+    }
+
+    public function storeNewPostApi(Request $request){
+        $incomingFields = $this->stripHtmlAndValidateFields($request);
+        $incomingFields['user_id'] = auth()->id();
+        // This will create new post record in database with the data in the $incomingFields
+        $newPost = Post::create($incomingFields);
+        dispatch(
+            new SendNewPostEmail([
+                'sendTo'=> auth()->user()->email,
+                'name'=>auth()->user()->username,
+                'postTitle'=>$newPost->title,
+            ])
+        );
+
+        return $newPost->id;
     }
     public function showCreateForm(){
         return view('create-post');
